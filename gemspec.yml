@@ -1,6 +1,6 @@
 name: list
-summary: "TODO: Summary"
-description: "TODO: Description"
+summary: "List[...]"
+description: "lists for rb"
 license: MIT
 authors: Joseph Weissman
 email: jweissman1986@gmail.com
