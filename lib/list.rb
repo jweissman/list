@@ -12,8 +12,9 @@ module List
     def_delegators :elems, :each
     alias_method :to_a, :elems
 
-    def initialize(elems=[])
-      puts "====> CREATE NEW LIST OF #{self.class.type}"
+    def initialize(*elems) #=[])
+      puts "====> CREATE NEW LIST OF #{my_type}"
+      elems.map(&method(:verify!))
       @elems = elems
     end
 
@@ -24,7 +25,7 @@ module List
     alias_method :<<, :push
 
   protected
-    def verify(it)
+    def valid?(it)
       # my_type = self.class.type
       it.is_a?(my_type)
     end
@@ -32,7 +33,7 @@ module List
     def verify!(it)
       # my_type = self.class.type
       puts "CHECK: is #{it} a #{my_type}"
-      unless verify(it)
+      unless valid?(it)
         puts "WARNING: #{it} is not #{my_type}"
         if List.validating?
           raise InvalidItemClassError.new("#{it} is not #{my_type}")
@@ -41,7 +42,7 @@ module List
     end
 
     def my_type
-      self.class.type || self.class.superclass.type #.pry
+      self.class.type || self.class.superclass.type
     end
 
     class << self

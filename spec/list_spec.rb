@@ -47,4 +47,37 @@ TEXT
     # doesn't accept ints
     expect{strs << 1}.to raise_error(List::InvalidItemClassError)
   end
+
+  it 'cannot create a collection with wrong typed elements' do
+    hash_set = ListOfHashes.new
+    hash_set.push({hello: 'world'})
+    expect(hash_set.first).to eq({hello: 'world'})
+
+    # broken_hash_set
+    expect {
+      ListOfHashes.new('a', 1)
+    }.to raise_error(List::InvalidItemClassError)
+  end
+end
+
+describe 'Tuple[]' do
+  it 'is a tuple' do
+    point = PairOfInts.new(5,5)
+    expect(point.x).to eq(5)
+
+    expect { PairOfInts.new('zero', 0.0) }.to raise_error(Tuple::InvalidValueClassError)
+  end
+
+  it 'can make a list of tuples' do
+    # both ways of constructing points give the same point
+    expect(Point.new(0,0)).to eq(Point[0,0])
+
+    xys = Points.new
+    xys.push(Point[0,10])
+    xys.push(Point[10,0])
+    expect(xys.center).to eq([5,5])
+  end
+end
+
+describe 'Vector[]' do
 end
