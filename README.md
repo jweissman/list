@@ -12,13 +12,17 @@ Type-validating lists and vectors for Ruby.
 
 ## Features
 
-  - [x] An easy automatic collection wrapper with `List[Klass]`
+  - [x] An easy automatic collection wrapper with `List[...]`
   - [x] Print warnings (and optionally throws errors) if an element would be added that is not of the specified type
-  - [x] Inheritable with `class MyData < List[CustomType] ...`
-  - [ ] Tuples
-  - [ ] Vectors
-  - [ ] OneOf[...]?
-  - [ ] Abstracting over types / Something with eigenclasses? (???)
+  - [x] Inheritable with `class MyData < List[] ...`
+  - [x] Tuples
+  - [x] Vectors
+  - [ ] OneOf[...]
+  - [ ] Record[ field: Class...]
+  - [ ] RespondsTo[ :method, :predicate? ] -- support ducktyping
+  - [ ] Typeclasses?
+  - [ ] Wrapped type-checked functions? (method sigs -- input/output?) -- Function[ fn, Vector[3, Int] => List[Int] ]
+  - [ ] Abstracting over types / Something with eigenclasses? (GADTs?)
 
 ## Examples
 
@@ -40,7 +44,6 @@ Type-validating lists and vectors for Ruby.
 
       def mean
         sum / count
-      end
     end
 
     ys = DataSet.new(4,6)

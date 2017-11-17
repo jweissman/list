@@ -2,6 +2,8 @@ require 'rspec'
 require 'pry'
 require 'list'
 
+include List
+
 class ListOfNumbers < List[Integer]
   def sum
     inject(&:+)

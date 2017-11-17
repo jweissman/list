@@ -1,13 +1,14 @@
 require 'spec_helper'
 require 'list'
 
-describe 'List[]' do
+describe List::Collection do
   before(:all) do
-    List.validate! # set lists to raise errors
+    List::Configuration.validate! # set lists to raise errors
   end
 
   it 'should validate' do
-    expect(List).to be_validating
+    expect(List::Configuration).to be_validating
+
     ints = List[Integer].new
     ints << 2
     ints << 5
@@ -80,4 +81,11 @@ describe 'Tuple[]' do
 end
 
 describe 'Vector[]' do
+  it 'is a vector' do
+    Point3 = Vector[3, Int]
+    origin = Point3[0,0,0]
+    expect(origin.first).to eq(0)
+
+    expect { Point3[1,2] }.to raise_error(List::InvalidVectorLengthError)
+  end
 end
