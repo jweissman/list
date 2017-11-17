@@ -37,7 +37,7 @@ module List
       def verify!(args)
         unless valid?(args)
           obj, klass = *@error #errors(args)
-          print "WARNING: Invalid tuple structure: #{obj} is not a #{klass}"
+          print "WARNING: Invalid tuple structure: #{obj} is not an #{klass}"
           if List::Configuration.validating?
             raise InvalidValueClassError.new("Invalid tuple structure: #{obj} is not a #{klass}")
           end

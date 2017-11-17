@@ -2,10 +2,6 @@ require 'spec_helper'
 require 'list'
 
 describe List::Collection do
-  before(:all) do
-    List::Configuration.validate! # set lists to raise errors
-  end
-
   it 'should validate' do
     expect(List::Configuration).to be_validating
 
@@ -61,12 +57,12 @@ TEXT
   end
 end
 
-describe 'Tuple[]' do
-  it 'is a tuple' do
+describe Tuple do
+  it 'is a sum type' do
     point = PairOfInts.new(5,5)
     expect(point.x).to eq(5)
 
-    expect { PairOfInts.new('zero', 0.0) }.to raise_error(Tuple::InvalidValueClassError)
+    expect { PairOfInts.new('a string', 0.0) }.to raise_error(Tuple::InvalidValueClassError)
   end
 
   it 'can make a list of tuples' do
@@ -81,11 +77,27 @@ describe 'Tuple[]' do
 end
 
 describe 'Vector[]' do
-  it 'is a vector' do
+  it 'is a length-restricted collection' do
     Point3 = Vector[3, Int]
     origin = Point3[0,0,0]
     expect(origin.first).to eq(0)
 
     expect { Point3[1,2] }.to raise_error(List::InvalidVectorLengthError)
+  end
+end
+
+describe 'OneOf[...]' do
+  it 'is a discriminated union' do
+    anonymous = Anonymous.new
+    sad_user = UserAccount.new(
+      Username.new('sad'),
+      Email.new('sadmin@corp.co')
+    )
+
+    guest = User.new(anonymous)
+    expect(guest.display_name).to eq('guest-user-1')
+
+    admin = User.new(sad_user)
+    expect(admin.display_name).to eq('sad <sadmin@corp.co>')
   end
 end

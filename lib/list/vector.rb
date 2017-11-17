@@ -3,6 +3,7 @@
 module List
   module Vector
     class LengthRestrictedCollection
+      attr_reader :values
       def initialize(*values)
         puts "====> CREATE VECTOR (LEN #{self.class.len}) of #{self.class.type}"
         unless values.length == self.class.len
@@ -11,7 +12,7 @@ module List
           )
         end
 
-        @values = values
+        @values = values #.freeze
         # define ordinal methods?
       end
 

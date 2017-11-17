@@ -3,6 +3,7 @@ require 'pry'
 require 'list'
 
 include List
+List::Configuration.validate! # set lists to raise errors
 
 class ListOfNumbers < List[Integer]
   def sum
@@ -34,11 +35,6 @@ class PairOfInts < Tuple[Int,Int]
   def y; second end
 end
 
-# class IntVector3 < Vector[3,Int]
-# end
-
-
-Point = Tuple[Int,Int]
 
 module Arithmetic
   def average(xs)
@@ -50,11 +46,28 @@ module Arithmetic
   end
 end
 
+Point = Tuple[Int,Int]
 class Points < List[Point]
   include Arithmetic
   def center
     xs = map(&:first)
     ys = map(&:second)
     [ average(xs), average(ys) ]
+  end
+end
+
+###
+class Username < String; end
+class Email < String; end
+class UserAccount < Tuple[Username, Email]; end
+class Anonymous; end
+
+class User < OneOf[ UserAccount, Anonymous ]
+  def display_name
+    case item
+    when UserAccount then "#{item.first} <#{item.second}>"
+    when Anonymous then "guest-user-1"
+    # look, no else
+    end
   end
 end

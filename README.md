@@ -15,9 +15,9 @@ Type-validating lists and vectors for Ruby.
   - [x] An easy automatic collection wrapper with `List[...]`
   - [x] Print warnings (and optionally throws errors) if an element would be added that is not of the specified type
   - [x] Inheritable with `class MyData < List[] ...`
-  - [x] Tuples
   - [x] Vectors
-  - [ ] OneOf[...]
+  - [x] Tuples
+  - [x] OneOf[...]
   - [ ] Record[ field: Class...]
   - [ ] RespondsTo[ :method, :predicate? ] -- support ducktyping
   - [ ] Typeclasses?
@@ -62,6 +62,9 @@ Type-validating lists and vectors for Ruby.
     end
 
     # A vector is a list which validates length...
+    Point3 = Vector[3, Int]
+    origin = Point3[0,0,0]
+    expect(origin.first).to eq(0)
 
 ## Requirements
 
