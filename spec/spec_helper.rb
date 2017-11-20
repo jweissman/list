@@ -56,7 +56,7 @@ class Points < List[Point]
   end
 end
 
-###
+### one-of (unions)
 class Username < String; end
 class Email < String; end
 class UserAccount < Tuple[Username, Email]; end
@@ -71,3 +71,17 @@ class User < OneOf[ UserAccount, Anonymous ]
     end
   end
 end
+
+### records
+#
+class Animal < Record[ species: String, genus: String ]
+  def nomenclature
+    [ genus, species ].join(' ')
+  end
+end
+
+### typeclasses...
+
+### wrapped functions???
+
+### gadts???

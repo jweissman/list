@@ -2,7 +2,6 @@
 
 * [Homepage](https://rubygems.org/gems/list)
 * [Documentation](http://rubydoc.info/gems/list/frames)
-* [Email](mailto:jweissman1986 at gmail.com)
 
 [![Code Climate GPA](https://codeclimate.com/github//list/badges/gpa.svg)](https://codeclimate.com/github//list)
 
@@ -18,7 +17,7 @@ Type-validating lists and vectors for Ruby.
   - [x] Vectors
   - [x] Tuples
   - [x] OneOf[...]
-  - [ ] Record[ field: Class...]
+  - [x] Record[ field: Class...]
   - [ ] RespondsTo[ :method, :predicate? ] -- support ducktyping
   - [ ] Typeclasses?
   - [ ] Wrapped type-checked functions? (method sigs -- input/output?) -- Function[ fn, Vector[3, Int] => List[Int] ]
@@ -67,6 +66,8 @@ Type-validating lists and vectors for Ruby.
     expect(origin.first).to eq(0)
 
 ## Requirements
+
+  - Ruby
 
 ## Install
 

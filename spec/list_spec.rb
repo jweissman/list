@@ -62,7 +62,7 @@ describe Tuple do
     point = PairOfInts.new(5,5)
     expect(point.x).to eq(5)
 
-    expect { PairOfInts.new('a string', 0.0) }.to raise_error(Tuple::InvalidValueClassError)
+    expect { PairOfInts.new('a string', 0.0) }.to raise_error(InvalidTupleStructureError)
   end
 
   it 'can make a list of tuples' do
@@ -74,19 +74,23 @@ describe Tuple do
     xys.push(Point[10,0])
     expect(xys.center).to eq([5,5])
   end
+
+  it 'has to be exact' do
+    expect { PairOfInts.new(0) }.to raise_error(InvalidTupleStructureError)
+  end
 end
 
-describe 'Vector[]' do
+describe Vector do
   it 'is a length-restricted collection' do
     Point3 = Vector[3, Int]
     origin = Point3[0,0,0]
     expect(origin.first).to eq(0)
 
-    expect { Point3[1,2] }.to raise_error(List::InvalidVectorLengthError)
+    expect { Point3[1,2] }.to raise_error(InvalidVectorLengthError)
   end
 end
 
-describe 'OneOf[...]' do
+describe OneOf do
   it 'is a discriminated union' do
     anonymous = Anonymous.new
     sad_user = UserAccount.new(
@@ -99,5 +103,38 @@ describe 'OneOf[...]' do
 
     admin = User.new(sad_user)
     expect(admin.display_name).to eq('sad <sadmin@corp.co>')
+  end
+end
+
+describe Record do
+  let(:wolf) do
+    Animal.new(species: 'lupus', genus: 'canis')
+  end
+
+  let(:human) do
+    Animal.new(species: 'sapiens', genus: 'homo')
+  end
+
+  it 'is like a typed openstruct' do
+    expect(wolf.nomenclature).to eq('canis lupus')
+    expect(human.nomenclature).to eq('homo sapiens')
+  end
+
+  it 'cannot be created with invalid values' do
+    expect { Animal.new(species: 4, genus: 0.0) }.to raise_error(
+      List::InvalidRecordStructureError
+    )
+  end
+
+  it 'cannot be assigned invalid values' do
+    expect { wolf.species = 2 }.to raise_error(
+      List::InvalidRecordStructureError
+    )
+  end
+
+  it 'has to match the structure entirely' do
+    expect { Animal.new(species: 'alien') }.to raise_error(
+      List::InvalidRecordStructureError
+    )
   end
 end

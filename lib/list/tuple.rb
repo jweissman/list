@@ -1,7 +1,7 @@
 # really wanted to pair types...
 module List
   module Tuple
-    class InvalidValueClassError < StandardError; end
+    # class InvalidValueClassError < StandardError; end
     class AbstractTuple
       attr_reader :values
       def initialize(*args)
@@ -26,20 +26,41 @@ module List
       end
 
       protected
-      def valid?(args)
-        @error ||= args.zip(my_types).detect do |it,type|
+      def detect_invalid(args)
+        args.zip(my_types).detect do |it,type|
           !it.is_a?(type)
         end
-        @error.nil?
       end
-      # alias_method :errors, :valid?
+
+      def detect_incomplete(args)
+        args.length != my_types.length
+      end
+
+      def valid?(args)
+        !detect_invalid(args) && !detect_incomplete(args)
+      end
 
       def verify!(args)
         unless valid?(args)
-          obj, klass = *@error #errors(args)
-          print "WARNING: Invalid tuple structure: #{obj} is not an #{klass}"
+          messages = []
+          invalid = detect_invalid(args)
+          incomplete = detect_incomplete(args)
+
+          if invalid
+            obj, klass = *invalid #detect_invalid(args) #@error #errors(args)
+            message = "Invalid tuple structure: #{obj} is not an #{klass}"
+            puts "WARNING: #{message}"
+            messages.push(message)
+          end
+
+          if incomplete
+            message = "Tuple #{args} is not complete (length #{args.length} but requires #{my_types.length} elements)"
+            puts "WARNING: #{message}"
+            messages.push(message)
+          end
+
           if List::Configuration.validating?
-            raise InvalidValueClassError.new("Invalid tuple structure: #{obj} is not a #{klass}")
+            raise InvalidTupleStructureError.new(messages.join("; ")) #"Invalid tuple structure: #{obj} is not a #{klass}")
           end
         end
       end
@@ -60,4 +81,6 @@ module List
       alias_method :[], :of
     end
   end
+
+  class InvalidTupleStructureError < StandardError; end
 end
