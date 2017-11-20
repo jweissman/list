@@ -2,6 +2,8 @@ module List
   class Collection
     include Enumerable
     extend Forwardable
+
+    include List::Types
     attr_reader :elems
     def_delegators :elems, :each
     alias_method :to_a, :elems
@@ -20,7 +22,8 @@ module List
 
   protected
     def valid?(it)
-      it.is_a?(my_type)
+      validate_type(object: it, klass: my_type)
+      # it.is_a?(my_type)
     end
 
     def verify!(it)

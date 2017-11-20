@@ -1,6 +1,8 @@
 module List
   module Record
     class TypedKeyValues
+      include List::Types
+
       def initialize(**kwargs)
         puts "===> CREATE NEW RECORD OF #{my_structure}"
         verify!(kwargs)
@@ -14,7 +16,11 @@ module List
 
     protected
       def valid?(key, value)
-        value.is_a?(my_structure[key])
+        # value.is_a?(my_structure[key])
+        validate_type(
+          object: value,
+          klass: my_structure[key]
+        )
       end
 
       def detect_invalid(kwargs)

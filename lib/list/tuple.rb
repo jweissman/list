@@ -3,6 +3,8 @@ module List
   module Tuple
     # class InvalidValueClassError < StandardError; end
     class AbstractTuple
+      include List::Types
+
       attr_reader :values
       def initialize(*args)
         verify!(args)
@@ -27,8 +29,8 @@ module List
 
       protected
       def detect_invalid(args)
-        args.zip(my_types).detect do |it,type|
-          !it.is_a?(type)
+        args.zip(my_types).detect do |it, klass|
+          !validate_type(object: it, klass: klass)
         end
       end
 

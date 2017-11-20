@@ -65,6 +65,14 @@ Type-validating lists and vectors for Ruby.
     origin = Point3[0,0,0]
     expect(origin.first).to eq(0)
 
+    # A record builds a type-validated keyword 'struct'
+    class Animal < Record[ species: String, genus: String ]
+      def nomenclature
+        [ genus, species ].join(' ')
+      end
+    end
+
+
 ## Requirements
 
   - Ruby

@@ -91,7 +91,16 @@ describe Vector do
 end
 
 describe OneOf do
-  it 'is a discriminated union' do
+  it 'can do a list of discriminated unions' do
+    number_list = List[OneOf[Int,Float]].new
+
+    number_list.push 0.0
+    number_list.push 1234
+
+    expect { number_list.push('hi') }.to raise_error(InvalidItemClassError)
+  end
+
+  it 'manages users (example)' do
     anonymous = Anonymous.new
     sad_user = UserAccount.new(
       Username.new('sad'),
@@ -137,4 +146,23 @@ describe Record do
       List::InvalidRecordStructureError
     )
   end
+end
+
+describe RespondsTo do
+  it 'ducktypes' do
+    Numberish = RespondsTo[:to_i]
+
+    Numberish.new(124)
+    Numberish.new('240')
+    expect { Numberish.new([1,2,3]) }.to raise_error(InvalidDucktypingError)
+
+    numberish_list = List[Numberish].new
+    numberish_list.push('1234')
+    numberish_list.push(0.532)
+
+    expect { numberish_list.push([1,2,3]) }.to raise_error(List::InvalidItemClassError)
+  end
+end
+
+describe 'orchestration' do
 end

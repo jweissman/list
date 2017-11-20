@@ -1,6 +1,7 @@
 module List
   module OneOf
     class Union
+      extend List::Types
       attr_reader :item
 
       def initialize(it)
@@ -11,14 +12,12 @@ module List
     protected
       def verify!(obj)
         unless verify(obj)
-          raise InvalidDiscriminatedUnionError.new("WARNING: #{obj} is not in the set of types in this union: #{my_types}")
+          raise InvalidUnionStructureError.new("WARNING: #{obj} is not in the set of types in this union: #{my_types}")
         end
       end
 
       def verify(obj)
-        my_types.detect do |klass|
-          obj.is_a?(klass)
-        end
+        self.class.valid?(obj)
       end
 
       def my_types
@@ -28,6 +27,17 @@ module List
       class << self
         attr_accessor :types
         alias_method :[], :new
+
+        def inspect
+          "OneOf[#{types.join(',')}]"
+        end
+        alias_method :to_s, :inspect
+
+        def valid?(obj)
+          (types || superclass.types).detect do |klass|
+            validate_type(object: obj, klass: klass)
+          end
+        end
       end
     end
 
@@ -37,10 +47,10 @@ module List
         union_class.types = classes
         union_class
       end
+
       alias_method :[], :these
     end
-
-
-    class InvalidDiscriminatedUnionError < StandardError; end
   end
+
+  class InvalidUnionStructureError < StandardError; end
 end
