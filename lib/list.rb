@@ -7,6 +7,7 @@ require 'list/vector'
 require 'list/union'
 require 'list/record'
 require 'list/responds_to'
+require 'list/function'
 
 require 'forwardable'
 

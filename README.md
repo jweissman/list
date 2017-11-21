@@ -18,9 +18,10 @@ Type-validating lists and vectors for Ruby.
   - [x] Tuples
   - [x] OneOf[...]
   - [x] Record[ field: Class...]
-  - [ ] RespondsTo[ :method, :predicate? ] -- support ducktyping
-  - [ ] Typeclasses?
-  - [ ] Wrapped type-checked functions? (method sigs -- input/output?) -- Function[ fn, Vector[3, Int] => List[Int] ]
+  - [x] RespondsTo[ ... ] -- support ducktyping
+  - [ ] Functions (method sigs -- input/output?) -- Function[ fn, Vector[3, Int] => List[Int] ]
+  - [ ] Recursive type definitions
+  - [ ] Parameterized types (Typeclasses)
   - [ ] Abstracting over types / Something with eigenclasses? (GADTs?)
 
 ## Examples
@@ -43,6 +44,7 @@ Type-validating lists and vectors for Ruby.
 
       def mean
         sum / count
+      end
     end
 
     ys = DataSet.new(4,6)

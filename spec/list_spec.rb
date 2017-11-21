@@ -62,7 +62,9 @@ describe Tuple do
     point = PairOfInts.new(5,5)
     expect(point.x).to eq(5)
 
-    expect { PairOfInts.new('a string', 0.0) }.to raise_error(InvalidTupleStructureError)
+    expect { PairOfInts.new('a string', 0.0) }.to raise_error(
+      InvalidTupleStructureError
+    )
   end
 
   it 'can make a list of tuples' do
@@ -76,7 +78,9 @@ describe Tuple do
   end
 
   it 'has to be exact' do
-    expect { PairOfInts.new(0) }.to raise_error(InvalidTupleStructureError)
+    expect { PairOfInts.new(0) }.to raise_error(
+      InvalidTupleStructureError
+    )
   end
 end
 
@@ -86,7 +90,19 @@ describe Vector do
     origin = Point3[0,0,0]
     expect(origin.first).to eq(0)
 
-    expect { Point3[1,2] }.to raise_error(InvalidVectorLengthError)
+    expect { Point3[1,2] }.to raise_error(InvalidVectorStructureError)
+  end
+
+  it 'is still type-restricted' do
+    Point4 = Vector[4,Int]
+
+    origin = Point4[0,0,0,0]
+    expect(origin.first).to eq(0)
+    expect(origin.fourth).to eq(0)
+
+    expect {
+      Point4[0,0,0,'a string']
+    }.to raise_error(InvalidVectorStructureError)
   end
 end
 
@@ -164,5 +180,49 @@ describe RespondsTo do
   end
 end
 
+describe Function do
+  it 'typechecks function input and output' do
+    good_double = ->(x) { x*2 }
+    bad_double  = ->(x) { 'nope' }
+
+    IntToInt = Function[ Int => Int ]
+
+    expect(IntToInt.new(good_double).call(2)).to eq(4)
+    expect{IntToInt.new(good_double).call('hello')}.to raise_error(InvalidFunctionArgumentError)
+
+    expect{IntToInt.new(bad_double).call(1)}.to raise_error(InvalidFunctionResultError)
+  end
+end
+
 describe 'orchestration' do
+  # let's use them all in composition....
+  it 'can verify an array matches a list structure' do
+    Activity = Tuple[Date,List[String]]
+    today = Activity.new( Date.today, [ 'went shopping', 'came home' ])
+    expect(today).to be_a(Activity)
+    expect(today.second).to eq(['went shopping', 'came home'])
+    # for construction and structure-analytic purposes we can use an array in place of a list...
+
+  end
+
+  # seems like this should work, but will require 'weird' changes ?
+  xit 'combines lists and ducktyping' do
+    class Foo; def update(*args); puts "--> foo received update with #{args}" end end
+    class Bar; def update(*args); puts "--> bar received update with #{args}" end end
+
+    class Updateable < RespondsTo[:update]
+      def update!(*args)
+        raise 'an error' unless update(*args)
+      end
+    end
+
+    updateables = List[Updateable].new
+    updateables << Foo.new
+    updateables << Bar.new
+
+    updateables.map do |updateable|
+      expect(updateable).to be_a(Updateable) # ??
+      updateable.update!('quux')
+    end
+  end
 end

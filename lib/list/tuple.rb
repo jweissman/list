@@ -1,7 +1,6 @@
 # really wanted to pair types...
 module List
   module Tuple
-    # class InvalidValueClassError < StandardError; end
     class AbstractTuple
       include List::Types
 
@@ -49,20 +48,21 @@ module List
           incomplete = detect_incomplete(args)
 
           if invalid
-            obj, klass = *invalid #detect_invalid(args) #@error #errors(args)
+            obj, klass = *invalid
             message = "Invalid tuple structure: #{obj} is not an #{klass}"
             puts "WARNING: #{message}"
             messages.push(message)
           end
 
           if incomplete
-            message = "Tuple #{args} is not complete (length #{args.length} but requires #{my_types.length} elements)"
+            message = "Tuple #{args} is not complete \
+              (length #{args.length} but requires #{my_types.length} elements)"
             puts "WARNING: #{message}"
             messages.push(message)
           end
 
           if List::Configuration.validating?
-            raise InvalidTupleStructureError.new(messages.join("; ")) #"Invalid tuple structure: #{obj} is not a #{klass}")
+            raise InvalidTupleStructureError.new(messages.join("; "))
           end
         end
       end
