@@ -80,7 +80,51 @@ class Animal < Record[ species: String, genus: String ]
   end
 end
 
+## ducktyping
+#
+Numberish = RespondsTo[:to_i]
+
+
 ### typeclasses...
+class Empty; end
+class Leaf < Struct.new(:value); end
+
+Node = Tuple[ Datatype[:Tree], Leaf, Datatype[:Tree] ]
+Tree = Datatype[ :Tree, OneOf[ Empty, Leaf, Node ] ]
+
+# -- now that Tree is defined we can just reopen...
+class Tree
+  def depth
+    case item
+    when Empty then 0
+    when Leaf then 1
+    when Node then
+      left,_m,right=*item.values
+      1+[left.depth,right.depth].max
+    end
+  end
+
+  def insert(x)
+    case item
+    when Empty then
+      Tree[ Leaf[x] ]
+    when Leaf then
+      m=item.value
+      if x > m
+        Tree[ Node[ Tree[Empty.new], item, Tree[Leaf[x]] ]]
+      else
+        Tree[ Node[ Tree[Leaf[x]], item, Tree[Empty.new] ]]
+      end
+    when Node then
+      left,m,right=*item.values
+      if x > m
+        Tree[ Node[left, m, right.insert(x)] ]
+      else
+        Tree[ Node[left.insert(x), m, right] ]
+      end
+    end
+  end
+end
 
 ### wrapped functions???
 

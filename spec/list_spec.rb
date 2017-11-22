@@ -166,8 +166,6 @@ end
 
 describe RespondsTo do
   it 'ducktypes' do
-    Numberish = RespondsTo[:to_i]
-
     Numberish.new(124)
     Numberish.new('240')
     expect { Numberish.new([1,2,3]) }.to raise_error(InvalidDucktypingError)
@@ -192,6 +190,43 @@ describe Function do
 
     expect{IntToInt.new(bad_double).call(1)}.to raise_error(InvalidFunctionResultError)
   end
+end
+
+# describe Parameterize do
+# end
+
+describe Datatype do
+  it 'can construct recursive types' do
+    # binding.pry
+    # expect(BinaryTree.structure).to eq(
+    #   # OneOf[ EmptyTree, Leaf, Tuple[Datatype[:Tree], Datatype[:Tree]] ]
+    #   OneOf[ EmptyTree, Leaf, Tuple[Tree, Tree] ]
+    # )
+    btree = Tree.new(Empty.new)
+    expect(btree.depth).to eq(0)
+
+    btree = btree.insert(1)
+    expect(btree.depth).to eq(1)
+
+    btree = btree.insert(2)
+    expect(btree.depth).to eq(2)
+
+    # binding.pry
+
+    # btree = Tree.new
+
+                   # Tuple[Data[:Tree], Data[:Tree]], Empty  ] ]
+
+
+    # Tree = Data[:Node, :a] = OneOf[ EmptyTree, Data[:Node, :a] ]
+
+    # Data[:lst, :a] = EmptyList | Cons Data[:a] Data[:lst, :a]
+  end
+
+  xit 'can construct parameterized types' do
+    # Data[:a] ...
+  end
+
 end
 
 describe 'orchestration' do

@@ -70,6 +70,16 @@ module List
       class << self
         attr_accessor :types
         alias_method :[], :new
+
+        def inspect
+          # binding.pry
+          "Tuple[#{my_types.join(',')}]"
+        end
+        alias_method :to_s, :inspect
+
+        def my_types
+          types || superclass.types
+        end
       end
     end
 
